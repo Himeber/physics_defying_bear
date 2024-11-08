@@ -15,7 +15,6 @@ while True:
             sys.exit()
     
     game.show_background(screen)
-    game.bear(screen)
 
     pygame.display.update()
     clock.tick(120)
