@@ -16,6 +16,9 @@ class Game:
         self.rotated_bird = pygame.Surface((0,0))
         self.pipes = []
         self.pipe_height = [300, 425, 562]
+        self.score = 0 
+        self.font = pygame.font.SysFont(None,48)
+        self.high_score = 0
 
     def resize_images(self):
         self.bird = pygame.transform.scale(self.bird,(51,34))
@@ -81,3 +84,40 @@ class Game:
 
     def bear(self,screen):
         screen.blit(self.ber,(200,100))
+
+    def update_score(self):
+        self.score += 0.01
+    
+    def show_score(self,game_state,screen,color):
+        if game_state == "playing":
+            score_surface = self.font.render(str(int(self.score)), True, color)
+            score_rect = score_surface.get_rect(center = (202,75))
+            screen.blit(score_surface,score_rect)
+        
+        elif game_state == "game_over":
+            restart_text1 = self.font.render("Press Spacebar",True,color)
+            restart_rect1 = restart_text1.get_rect(center = (200,280))
+            screen.blit(restart_text1,restart_rect1)
+            
+            restart_text2 = self.font.render("to play again",True,color)
+            restart_rect2 = restart_text2.get_rect(center = (200,340))
+            screen.blit(restart_text2,restart_rect2)
+
+            high_score = self.font.render(f"High Score: {str(self.high_score)}",True,color)
+            high_rect = high_score.get_rect(center = (200,610))
+            screen.blit(high_score,high_rect)
+    
+    def game_over(self,screen,color):
+        self.update_high_score()
+        self.show_score("game_over",screen,color)
+
+    def update_high_score(self):
+        if self.score > self.high_score:
+            self.high_score = int(self.score)
+
+    def restart(self):
+        self.pipes = []
+        self.active = True
+        self.bird_rect.center = (70,180)
+        self.bird_movement = 0
+        self.score = 0
